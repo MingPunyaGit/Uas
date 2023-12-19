@@ -1,4 +1,1 @@
-:
-    print("Antrian Kosong.")
-else:
-    print("Antrian tidak Kosong.")
+

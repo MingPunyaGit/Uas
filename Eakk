@@ -1,0 +1,80 @@
+class Patient:
+    def __init__(self, name, priority):
+        self.name = name
+        self.priority = priority
+
+class Node:
+    def __init__(self, patient):
+        self.patient = patient
+        self.next = None
+
+class PriorityQueue:
+    def __init__(self):
+        self.head = None
+
+    def push(self, patient):
+        new_node = Node(patient)
+
+        # Jika antrian kosong atau prioritas baru lebih tinggi dari head
+        if not self.head or patient.priority < self.head.patient.priority:
+            new_node.next = self.head
+            self.head = new_node
+        else:
+            current = self.head
+            # Cari posisi yang tepat untuk memasukkan node baru
+            while current.next and current.next.patient.priority <= patient.priority:
+                current = current.next
+            new_node.next = current.next
+            current.next = new_node
+
+    def pop(self):
+        if not self.head:
+            return None
+
+        treated_patient = self.head.patient
+        self.head = self.head.next
+        return treated_patient
+
+    def remove(self, name):
+        if not self.head:
+            return
+
+        if self.head.patient.name == name:
+            self.head = self.head.next
+            return
+
+        current = self.head
+        while current.next and current.next.patient.name != name:
+            current = current.next
+
+        if current.next:
+            current.next = current.next.next
+
+    def peek(self):
+        return self.head.patient if self.head else None
+
+    def is_empty(self):
+        return not self.head
+
+# Contoh penggunaan
+queue = PriorityQueue()
+
+patient1 = Patient("Gian", 2)
+patient2 = Patient("Kezia", 1)
+patient3 = Patient("Alexis", 3)
+
+queue.push(patient1)
+queue.push(patient2)
+queue.push(patient3)
+
+print("Pasien dengan prioritas tertinggi:", queue.peek().name)
+
+treated_patient = queue.pop()
+print("Pasien dirawat:", treated_patient.name)
+
+queue.remove("Gian")
+
+if queue.is_empty():
+    print("Antrian Kosong.")
+else:
+    print("Antrian tidak Kosong.")
